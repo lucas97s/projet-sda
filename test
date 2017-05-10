@@ -1,0 +1,69 @@
+#FICHIER DE TESTE
+################
+
+#TESTES CLASSIQUES
+
+# 42.0000
+42
+# (1 + 2) * 3 - 4 = 5.0000
+- * + 1 2 3 4
+# 1.5 + min(3, 2.5) = 4.000
++ 1.5 min 3 2.5
+# 1.5 + min(3, ???) = ERROR
++ 1.5 min 3
+# 2/3 + 4 = 4.6667
++ / 2 3 4
+# ln(exp(3)) = 3.000
+ln exp 3
+# sqrt(4) + floor(3.5) = 5.000
++ sqrt 4 floor 3.5
+# sqrt(4) + 5 / 2 = 4.5000
++ sqrt 4 / 5 2
+# sqrt(4) + floor(5 / 2) = 4.000
++ sqrt 4 floor / 5 2
+# abs(-3) = 3.0000
+abs -3
+# abs(3) = 3.0000
+abs 3
+# 1 + floor(3.14) = 4.0000
++ 1 floor 3.14
+# 1 + ceil(3.14) = 5.0000
++ 1 ceil 3.14
+
+#TESTES PARENTHESES
+
+# + 1 2 3 = ERROR
++ 1 2 3
+# * ( + 1 2 3 4 ) 3 = 30.0000
+* ( + 1 2 3 4 ) 3
+#  ( min 1 2 3) + 1 = 2.000
++ ( min 1 2 3 ) 1
+# ( ) = ERROR
+( )
+# ( 1 ) = 1.0000
+( 1 )
+# ( 1 2 ) = ERROR
+( 1 2 )
+# ( exp 1 ) = ERROR
+( exp 1 )
+
+#TESTES VARIABLES
+
+# a = ERROR
+a
+# = a 1
+= a 1
+# a = 1
+a
+# = a 2
+= a 2
+# a = 2
+a
+# a=2, b=3*a , ( a + b ) * b = 48.0000
+* + = a 2 = b * 3 a b
+
+#calcul du volume d'un cylindre de rayon 2 et de haueteur 5
+#p = 3.1416, r = 2, cacul de l'aire a, a = p * r * r = 3.1416 * 2 * 2 = 12.5664
+= a ( * = p 3.1416 = r 2 r )
+#h = 5, calcul du volume v, v = a * h = a * 5 = 62.8320
+= v * = h 5 a
