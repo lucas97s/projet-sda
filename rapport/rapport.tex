@@ -1,0 +1,172 @@
+\documentclass[a4paper,11pt,DIV=11]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{dirtytalk}
+
+
+%opening
+\title{Rapport de projet: \emph{calcultarice polonaise}}
+\author{Lucas Schott}
+
+\begin{document}
+
+\begin{onehalfspace}
+
+    \maketitle
+     \\ \\ \\ \\ \\ \\ \\ \\ \\
+
+
+    \section*{Introduction}
+
+
+    Le but de ce projet est de réaliser une calculatrice polonaise qui lit des
+    expressions arithmétiques au format prefix sur l'entrée standard. Ces expressions arithmétique
+    sont à écrire sous forme de chaine de caractères. Ce projet à été réalisé seul en langage C,
+    révision C11.
+    On peut utiliser le programme de plusieurs manières:
+
+    \begin{itemize}
+        \item en envoyant directement les expressions à calculer via un tube:\\
+            {\fontfamily{lmtt}\selectfont \$ printf '+ * - 1 2 3 4' | ./pc\\
+            1.0000}
+        \item de manière interactive, en lancant le programme et en entrant les expressions:\\
+            {\fontfamily{lmtt}\selectfont \$ ./pc\\
+            + * - 1 2 3 4\\
+            1.0000}
+            \\
+    \end{itemize}
+
+
+    \section*{Utilisation}
+
+
+    Pour écrire des expressions, il faut mettre un espace en chaque mots de l'expression, les
+    opérateurs, les nombres, les parenthèses ou même {\fontfamily{lmtt}\selectfont \say{\#}}
+    pour introduire les commentaires. Le résultat de l'expression écrite est donnée sur la ligne
+    en dessous s'il est valide. Si l'expression est invalide, une information sur l'erreur
+    rencontrée est donnée, suivit de {\fontfamily{lmtt}\selectfont\mbox{\say{ERROR}}}. Les
+    expressions arithmétiques sont composés d'opérateurs et d'opérandes, chaque opérande peut être
+    une expression.\\
+
+    Le programme \emph{pc} admet 6 opérateurs binaires: +, -, *, /, min, et max, qui s'utilisent de
+    la manière suivante:\\
+    {\fontfamily{lmtt}\selectfont <operateur binaire> <operande1> <operande2>\\}
+
+    Il admet 6 opérateurs unaires: exp, ln, abs, floor et ceil qui s'utilisent de cette manière:\\
+    {\fontfamily{lmtt}\selectfont <operateur unaire> <operande>\\}
+
+    Le programme admet aussi des parenthèses, les parenthèses permettent uniquement d'augmenter
+    l'arité des opérateurs binaires. Quand une parenthèses est ouverte le mot suivant doit être un
+    opérateur binaire suivit d'opérandes, l'opérateur s'executera sur toutes les
+    opérandes jusqu'à tomber sur une parenthèse fermante. Les parentheses d'utilisent de la
+    manière suivante:\\
+    {\fontfamily{lmtt}\selectfont ( <operateur binaire> <operande1> \ldots <operandeN> )\\}
+
+    Le programme permet aussi d'affecter une valeur à une variable. La valeur peut être issu d'une
+    expression. Le resultat retourné par une affectation est la valeur affectée. Une variable est
+    un unique caractère alphabétique minuscule, sa valeur est conservée pour les expression suivantes
+    jusqu'à la sortie du programme ou jusqu'a ce qu'on lui réaffecte une nouvelle valeure. Une variable
+    déjà initialisée peut être ré-affectée à tout moment. L'affectation fonctionne de la manière
+    suivante:\\
+    {\fontfamily{lmtt}\selectfont = <variable> <expression>\\}
+
+    Le programme permet aussi d'écrire des commentaires, tout ce qui est marqué à partir du symbole
+    \say{\#} et jusqu'à la fin de la ligne est un commmentaire et n'influra en rien sur le résultat
+    du calcul.\\
+    {\fontfamily{lmtt}\selectfont \# <commentaire>\\
+    <expression> \# <commentaire>\\}
+
+
+    \section*{Implémentation}
+
+
+    Le programme a été réalisé en langage C, il est composé de deux fichiers \say{.c} et d'un fichier
+    \say{.h}: abin.c et abin.h définissent les fonctions sur les arbres binaires, pc.c contient les
+    fonctions de lecture des expressions, d'évaluation et le main.\\ 
+
+    \subsection*{Structure de donnée}
+
+    \begin{itemize}
+        \item[$\bullet$] un tableau de chaine de caractères \emph{op\_tab} qui contient les chaines
+            représentant chaque opérateur. Et \say{\textbackslash{}0} s'il n'y a pas d'opérateur.
+        \item[$\bullet$] une structure \emph{noeud} qui contient:
+            \begin{itemize}
+                \item un entier \emph{op} qui représente un opérateur.
+                \item une double \emph{val} qui contient la valeur du noeud si c'est une feuille.
+                \item un booleen \emph{unaire} qui vaut true si l'operateur est unaire, false sinon.
+                \item deux struct s\_noeud * fg et fd, des pointeurs vers les fils gauche et droit.
+            \end{itemize}
+        \item[$\bullet$] une structure \emph{resultat} contenant:
+            \begin{itemize}
+                \item un double nombre qui contient la valeur du résultat.
+                \item un booleen valide qui vaut true si le resultat est issu d'une expression
+                    ou s'il y a eu une erreur dans l'évaluation de l'expression.
+            \end{itemize}
+        \item[$\bullet$] une structure \emph{variable} contenant:
+            \begin{itemize}
+                \item un double valeur qui contient la valeur de la variable.
+                \item un bolléen utilise qui vaut true si la variable est initialisée.
+            \end{itemize}
+        \item[$\bullet$] un tableau de variables \emph{var\_tab} qui contient 26 \emph{structures variable}
+            pour stocker les valeurs qui leur sont affectés.
+    \end{itemize}
+     \\
+
+    \subsection*{Déroulement du programme}
+
+    \begin{itemize}
+        \item[$\bullet$] Le programme lit une chaine de caractère dans l'entrée standard avec
+            \emph{fges}.
+        \item[$\bullet$] Il divise ensuite la chaine obtenue en mots avec \emph{strtok}.
+        \item[$\bullet$] Il lit ensuite l'expression mot par mot en enracinant la valeur du mot de
+            façon récursive:
+            \begin{itemize}
+                \item Si le mot est un opérateur binaire, il continuera à lire en enracinant dans
+                    le fils gauche jusquà arriver à une feuille. Puis continura à lire en
+                    enracinant dans le fils droit.
+                \item Si le mot est un opérateur unaire, il continuera à lire en enracinant dans le
+                    fils gauche jusqu'à arriver à une feuille..
+                \item Si le mot est un nombre, il s'arretera de lire la sous-expression.
+                \item si le mot est une parenthese ouvrante, le programme lira le mot suivant qui
+                    doit être un operateur binaire ou un nombre:
+                    \begin{itemize}
+                        \item[-] si c'est un nombre, il va enraciner ce nombre
+                        \item[-] si c'est un operateur binaire, il va lire la première opérande qu'il
+                            va enraciner à droite, et à gauche il va ré-enraciner l'operateur, il va
+                            ainsi lire chaque opérande jusqu'à tomber sur la parenthese fermante.
+                    \end{itemize}
+                \item si le mot est un \say{=}, il va lire le nom de la variable, puis lire l'expression à
+                    affecter à cette variable. La valeur de la variable sera enraciné.
+            \end{itemize}
+        \item[$\bullet$] Il va pour finir évaluer le resultat de l'expression en parcourant l'arbre en profondeur.
+        \item[$\bullet$] Le resultat est affiché sur la sortie standard.
+    \end{itemize}
+
+
+    \section*{Difficultés rencontrées}
+
+    Le programme de base a été relativement simple à réaliser, après un moment de refléxion sur les algorithmes
+    et les structures de données à utiliser, l'implémentation a été assez rapide et le programme fonctionnait
+    correctement. Les premiers problèmes sont arrivés alors que j'implémentais la gestion des parenthèses
+    j'ai mis du temps à trouver tous les cas possible à gérer. Une fois les parenthèses fonctionnelles,
+    l'affectation de valeur à des variables a été assez rapide et sans trop de difficultés. Au final j'ai
+    pris du temps à réaliser le programme \emph{pc}, mais cela est dù à de nombreuses petites erreurs, je
+    n'ai jamais été bloqué très longtemps.
+
+
+    \section*{Conclusion}
+
+    Ce programme \emph{pc} a été très interressant à réaliser et m'a permis de connaitre de nouveaux outils
+    en programmation C tel que \emph{strtok}. Ce projet m'a aussi permis de comprendre et de voir un exemple
+    concrêt d'utilisation d'arbres binaire en informatique, et m'a fait prendre concience de l'importance
+    d'une structure de donnée claire et efficace. J'ai passé une vingtaine d'heures sur ce projet que j'ai
+    trouvé très interressant. Après avoir effectué de nombreux testes et y compris avec valgrind, je pense
+    mon programme est opérationnel dans les fonctionnalités que j'ai réalisé.
+
+
+\end{onehalfspace}
+
+\end{document}
