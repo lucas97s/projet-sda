@@ -128,22 +128,10 @@ Déroulement du programme:
 Difficultés rencontrées:
 ------------------------------------------------------------------------------------------
 
-Le programme de base a été relativement simple à réaliser, après un moment de refléxion sur les algorithmes
-et les structures de données à utiliser, l'implémentation a été assez rapide et le programme fonctionnait
-correctement. Les premiers problèmes sont arrivés alors que j'implémentais la gestion des parenthèses
-j'ai mis du temps à trouver tous les cas possible à gérer. Une fois les parenthèses fonctionnelles,
-l'affectation de valeur à des variables a été assez rapide et sans trop de difficultés. Au final j'ai
-pris du temps à réaliser le programme pc, mais cela est dù à de nombreuses petites erreurs, je
-n'ai jamais été bloqué très longtemps.
-
-
-
-Conclusion:
-----------------------------------------------------------------------------------------
-
-Ce programme pc a été très interressant à réaliser et m'a permis de connaitre de nouveaux outils
-en programmation C tel que strtok. Ce projet m'a aussi permis de comprendre et de voir un exemple
-concrêt d'utilisation d'arbres binaire en informatique, et m'a fait prendre concience de l'importance
-d'une structure de donnée claire et efficace. J'ai passé une vingtaine d'heures sur ce projet que j'ai
-trouvé très interressant. Après avoir effectué de nombreux testes et y compris avec valgrind, je pense
-mon programme est opérationnel dans les fonctionnalités que j'ai réalisé.
+Le programme de base a été relativement simple à réaliser, après un moment de refléxion sur
+les algorithmes et les structures de données à utiliser, l'implémentation a été assez rapide
+et le programme fonctionnait correctement. Les premiers problèmes sont arrivés alors que
+j'implémentais la gestion des parenthèses j'ai mis du temps à trouver tous les cas possible
+à gérer. Une fois les parenthèses fonctionnelles, l'affectation de valeur à des variables a
+été assez rapide et sans trop de difficultés. Au final j'ai pris du temps à réaliser le
+programme pc, mais cela est dù à de nombreuses petites erreurs, je n'ai jamais été bloqué très longtemps.
